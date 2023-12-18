@@ -1,0 +1,112 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+body {
+    background: #444;
+}
+
+.mast {
+    margin: auto;
+    max-width: 1024px;
+    padding: 0 20px;
+}
+
+#kvapp {
+    height: 100%;
+    padding-top: 56px;
+    width: 100%;
+}
+
+nav {
+    background: #444;
+    position: fixed;
+    top: 0;
+    height: 48px;
+    width: 100%;
+    box-shadow: 1px 0 10px 1px #111;
+}
+
+ul#menu-container {
+    height: 100%;
+}
+
+li.menu-item {
+    color: #dcdcdc;
+    list-style: none;
+    height: 100%;
+    line-height: 56px;
+}
+
+li.menu-item .glyphicon {
+    font-size: 24px;
+}
+
+li#examples.menu-item select {
+    background-color: #333;
+    font-size: 16px;
+}
+
+li#examples.menu-item select:hover {
+    cursor: pointer;
+}
+
+#ide {
+    color: #dcdcdc;
+}
+
+.ide-part {
+    position: static;
+    display: inline-block;
+}
+
+.header h5,
+.header .extra {
+    display: inline-block;
+}
+
+.header .extra {
+    float: right;
+}
+
+#code #code-input,
+#output #text,
+#debug-container {
+    padding: 0 4px;
+    background: #333;
+    resize: none;
+    height: 250px;
+    width: 100%;
+}
+
+#debug-container {
+    border: 1px solid rgb(169, 169, 169);
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 48px;
+}
+
+#debug-table {
+    display: table;
+    width: 100%;
+}
+
+#debug-caption .debug-col {
+    color: darkorange;
+    padding: 5px 0;
+    font-weight: 700;
+}
+
+.debug-item {
+    display: table-row;
+}
+
+span.debug-col {
+    display: table-cell;
+    text-align: center;
+}
