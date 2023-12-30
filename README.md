@@ -1,8 +1,8 @@
-## Gradle Tasks
+## Brainfurnicate Kotlin/JS
 
-### Resource Processing
+This is a remake of [Brainfurnicate](https://github.com/dancing-koala/brainfurnicate) with modern technologies.
 
-* generatePotFile - Generates a `src/jsMain/resources/i18n/messages.pot` translation template file.
+Powered by the wonderfule
 
 ### Running
 
