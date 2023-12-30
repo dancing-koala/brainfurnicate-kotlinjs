@@ -33,8 +33,8 @@ sealed interface ProgramError {
         override val description: String = "--> $type at [$addr] <${token}>"
     }
 
-    data class UnknownError(val exception: Exception) : ProgramError {
-        override val description: String = exception.message ?: "Unknown error"
+    data class UnknownError(val throwable: Throwable) : ProgramError {
+        override val description: String = throwable.message ?: "Unknown error"
     }
 }
 
@@ -53,9 +53,17 @@ class AppModel {
 
     private var parseAndRunJob: Job? = null
 
+    private val handler = CoroutineExceptionHandler { _, exception ->
+        setErrorState(errors = listOf(ProgramError.UnknownError(exception)))
+    }
+
     fun loadCodePreset(index: Int) {
         mutableUiState.update {
-            it.copy(currentCode = presets[index])
+            it.copy(
+                currentCode = presets[index],
+                programState = ProgramState.Idle,
+                programResult = ProgramResult()
+            )
         }
     }
 
@@ -102,29 +110,25 @@ class AppModel {
     fun parseAndRun(rawCode: String) {
         parseAndRunJob?.cancel()
 
-        parseAndRunJob = scope.launch {
-            try {
-                setParsingState(rawCode)
+        parseAndRunJob = scope.launch(handler) {
+            setParsingState(rawCode)
 
-                val parserResult = parse(rawCode)
+            val parserResult = parse(rawCode)
 
-                yield()
+            yield()
 
-                if (!parserResult.success) {
-                    setErrorState(parserResult.errors)
-                    return@launch
-                }
-
-                setRunningState()
-
-                val interpreterResult = interpret(parserResult.tokens)
-
-                yield()
-
-                setDoneState(interpreterResult)
-            } catch (e: Exception) {
-                setErrorState(errors = listOf(ProgramError.UnknownError(e)))
+            if (!parserResult.success) {
+                setErrorState(parserResult.errors)
+                return@launch
             }
+
+            setRunningState()
+
+            val interpreterResult = interpret(parserResult.tokens)
+
+            yield()
+
+            setDoneState(interpreterResult)
         }
     }
 
@@ -138,7 +142,10 @@ class AppModel {
             parseAndRunJob = null
 
             mutableUiState.update {
-                it.copy(programState = ProgramState.Interrupted)
+                it.copy(
+                    programState = ProgramState.Interrupted,
+                    programResult = ProgramResult()
+                )
             }
         }
     }
